@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:3001/api/todos";
+const API_URL = "http://localhost:3000/api/todos"; // always works from browser
 
 function loadTodos() {
   fetch(API_URL)
@@ -34,11 +34,13 @@ function addTodo() {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ title, description })
-  }).then(() => {
-    titleInput.value = "";
-    descInput.value = "";
-    loadTodos();
-  });
+  })
+    .then(res => res.json())
+    .then(() => {
+      titleInput.value = "";
+      descInput.value = "";
+      loadTodos();
+    });
 }
 
 function deleteTodo(id) {

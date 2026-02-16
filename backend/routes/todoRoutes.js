@@ -1,57 +1,69 @@
 const express = require("express");
 const router = express.Router();
-const db = require("../db");
+const connection = require("../db");
 
-// Get all todos
+// GET all todos
 router.get("/", (req, res) => {
-  db.query("SELECT * FROM todos", (err, results) => {
-    if (err) return res.status(500).json({ error: err });
-
-    console.log(results); // <-- DEBUG: shows all records in terminal
+  const sql = "SELECT * FROM todos ORDER BY id DESC";
+  connection.query(sql, (err, results) => {
+    if (err) {
+      console.error("❌ Error fetching todos:", err);
+      return res.status(500).json({ error: "Database error" });
+    }
     res.json(results);
   });
 });
 
-// Create todo
+// POST a new todo
 router.post("/", (req, res) => {
-  const { title, description } = req.body;
+  const { title, description, status } = req.body;
 
-  db.query(
-    "INSERT INTO todos (title, description) VALUES (?, ?)",
-    [title, description],
-    (err, results) => {
-      if (err) return res.status(500).json({ error: err });
+  if (!title) {
+    return res.status(400).json({ error: "Title is required" });
+  }
 
-      console.log("Inserted ID:", results.insertId); // <-- DEBUG
-      res.json({ message: "Todo created", id: results.insertId });
+  const sql = "INSERT INTO todos (title, description, status) VALUES (?, ?, ?)";
+  connection.query(sql, [title, description || "", status || "pending"], (err, result) => {
+    if (err) {
+      console.error("❌ Error inserting todo:", err);
+      return res.status(500).json({ error: "Database error" });
     }
-  );
+
+    // return the inserted todo
+    res.json({
+      id: result.insertId,
+      title,
+      description: description || "",
+      status: status || "pending"
+    });
+  });
 });
 
-// Update todo status
+// PUT to update a todo status
 router.put("/:id", (req, res) => {
   const { id } = req.params;
-  const { status } = req.body;
+  const { title, description, status } = req.body;
 
-  db.query(
-    "UPDATE todos SET status = ? WHERE id = ?",
-    [status, id],
-    (err, results) => {
-      if (err) return res.status(500).json({ error: err });
-
-      res.json({ message: "Todo updated" });
+  const sql = "UPDATE todos SET title = ?, description = ?, status = ? WHERE id = ?";
+  connection.query(sql, [title, description, status, id], (err) => {
+    if (err) {
+      console.error("❌ Error updating todo:", err);
+      return res.status(500).json({ error: "Database error" });
     }
-  );
+    res.json({ message: "Todo updated successfully" });
+  });
 });
 
-// Delete todo
+// DELETE a todo
 router.delete("/:id", (req, res) => {
   const { id } = req.params;
-
-  db.query("DELETE FROM todos WHERE id = ?", [id], (err, results) => {
-    if (err) return res.status(500).json({ error: err });
-
-    res.json({ message: "Todo deleted" });
+  const sql = "DELETE FROM todos WHERE id = ?";
+  connection.query(sql, [id], (err) => {
+    if (err) {
+      console.error("❌ Error deleting todo:", err);
+      return res.status(500).json({ error: "Database error" });
+    }
+    res.json({ message: "Todo deleted successfully" });
   });
 });
 

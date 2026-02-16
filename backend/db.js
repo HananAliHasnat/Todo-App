@@ -1,18 +1,19 @@
-const mysql = require("mysql");
+const mysql = require("mysql2");
 
-const db = mysql.createConnection({
-  host: "localhost",
-  user: "app_user",
-  password: "YourStrongPassword",
-  database: "todo_db"
+const connection = mysql.createConnection({
+  host: process.env.DB_HOST || "db",
+  user: process.env.DB_USER || "root",
+  password: process.env.DB_PASSWORD || "rootpassword",
+  database: process.env.DB_NAME || "todo_db"
 });
 
-db.connect(err => {
+
+connection.connect((err) => {
   if (err) {
     console.error("❌ MySQL connection failed:", err);
-    return;
+    process.exit(1); // stop backend if DB fails
   }
-  console.log("MySQL connected");
+  console.log("✅ Connected to MySQL database");
 });
 
-module.exports = db;
+module.exports = connection;

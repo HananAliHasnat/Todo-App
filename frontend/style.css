@@ -1,26 +1,139 @@
+/* RESET */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* BODY & BACKGROUND */
 body {
-  font-family: Arial, sans-serif;
-  padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  height: 100vh;
+  background: linear-gradient(135deg, #00f0ff, #00c9ff);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-input {
-  padding: 6px;
-  margin-right: 5px;
+/* MAIN CARD */
+.todo-container {
+  background: #ffffff;
+  width: 400px;
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+  animation: fadeIn 0.6s ease-in-out;
 }
 
-button {
-  margin-left: 10px;
+/* ANIMATION */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.todo-item {
-  margin-top: 10px;
+/* HEADER */
+h1 {
+  text-align: center;
+  color: #007777;
+  font-size: 28px;
+  margin-bottom: 5px;
 }
 
-.title {
+.tagline {
+  text-align: center;
+  color: #555;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+/* INPUT AREA */
+.input-box {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.input-box input {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  outline: none;
+  font-size: 14px;
+}
+
+.input-box input:focus {
+  border-color: #00b3b3;
+}
+
+.input-box button {
+  background: #00b3b3;
+  border: none;
+  color: white;
+  padding: 12px;
+  border-radius: 8px;
+  cursor: pointer;
   font-weight: bold;
+  transition: background 0.3s;
 }
 
-.description {
-  color: gray;
-  margin-left: 8px;
+.input-box button:hover {
+  background: #008080;
+}
+
+/* TODO LIST */
+ul {
+  list-style: none;
+  max-height: 300px;
+  overflow-y: auto;
+  padding-right: 5px;
+}
+
+li {
+  background: #e0ffff;
+  padding: 12px;
+  margin-bottom: 12px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  word-break: break-word;
+}
+
+/* TODO TEXT */
+li .title {
+  font-weight: bold;
+  color: #007777;
+  margin-right: 8px;
+}
+
+li .description {
+  color: #555;
+  font-size: 13px;
+  flex: 1;
+  margin-left: 5px;
+  word-wrap: break-word;
+}
+
+/* DELETE BUTTON */
+li button {
+  background: #ff5c5c;
+  border: none;
+  padding: 6px 12px;
+  font-size: 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-left: 10px;
+  transition: background 0.3s;
+}
+
+li button:hover {
+  background: #cc0000;
 }
